@@ -9,13 +9,14 @@ from Drone_utils.utils import *
 
 class DroneServer:
 
-    def __init__(self, host, port, number_of_drones):
+    def __init__(self, host: str, port: int, number_of_drones: int):
         self.__host = host
         self.__port = port
         self.__drone_number = number_of_drones
         self.s = socket.socket()
         self.all_connections = []
         self.all_addresses = []
+        self.conn_dict = {}
 
     @property
     def host(self):
@@ -41,8 +42,6 @@ class DroneServer:
 
     def accept_conn(self):
 
-        conn_dict = {}
-
         while True:
             try:
                 conn, address = self.s.accept()
@@ -56,9 +55,9 @@ class DroneServer:
                     n = 0
                     for i in self.all_addresses:
                         for c in self.all_connections:
-                            conn_dict[self.all_addresses[n][0]] = self.all_connections[n]
+                            self.conn_dict[self.all_addresses[n][0]] = self.all_connections[n]
                             n += 1
-                            print(conn_dict)
+                            print(self.conn_dict)
 
                         break
                     break
@@ -122,7 +121,6 @@ class RunServer(DroneServer):
                     break
         except:
             print("Selection not valid")
-            return None
 
 
 def create_server(host, port, number_of_drones):
@@ -130,7 +128,7 @@ def create_server(host, port, number_of_drones):
     return gcs_server
 
 
-gcs_server = create_server('127.0.0.1', 9999, 2)
-gcs_server.create_socket()
-gcs_server.accept_conn()
-gcs_server.send_commands()
+# gcs_server = create_server('127.0.0.1', 9999, 1)
+# gcs_server.create_socket()
+# gcs_server.accept_conn()
+# gcs_server.send_commands()
