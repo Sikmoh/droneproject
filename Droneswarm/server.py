@@ -97,7 +97,7 @@ class RunServer(DroneServer):
                     i.send(str.encode(cmd))
             elif cmd == 'upload':
                 print('Path upload in progress')
-                upload_path()
+                upload_path(self)
             elif cmd:
                 self.get_target(cmd)
 
@@ -106,7 +106,9 @@ class RunServer(DroneServer):
                 print('unknown command,no action taken')
 
     def get_target(self, cmd):
-
+        # use this to select a target drone
+        # Welcome to ALAB firefly show.Start show here: select 0 or 1...
+        # Press enter to exit from target command section
         try:
             target = cmd.replace('select ', '')  # target = id of drone
 
@@ -129,7 +131,7 @@ def create_server(host, port, number_of_drones):
     return gcs_server
 
 
-# gcs_server = create_server('127.0.0.1', 9999, 1)
-# gcs_server.create_socket()
-# gcs_server.accept_conn()
-# gcs_server.send_commands()
+gcs_server = create_server('127.0.0.1', 9999, 1)
+gcs_server.create_socket()
+gcs_server.accept_conn()
+gcs_server.send_commands()
