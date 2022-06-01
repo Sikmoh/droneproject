@@ -1,5 +1,6 @@
 #  Python Imports
 # -------------------------------------------------
+import re
 import socket
 import sys
 #  Module Imports
@@ -76,7 +77,7 @@ class RunServer(DroneServer):
             if cmd == 'quit':
                 self.s.close()
                 sys.exit()
-            elif cmd == 'arm10':
+            elif cmd == 'arm{}'.format(cmd[-2:]):
                 for i in self.all_connections:
                     i.send(str.encode(cmd))
             elif cmd == 'test':
@@ -114,12 +115,12 @@ class RunServer(DroneServer):
             print("You are now connected to :" + str(self.all_addresses[drone_id][0]))
             print(str(self.all_addresses[drone_id][0]) + ">", end="")
             while True:
-                cmd = input('send command to target:')
+                cmd = input('send command to drone:')
                 if cmd:
                     conn.send(str.encode(cmd))
                 else:
                     break
-        except:
+        except cmd != 'select':
             print("Selection not valid")
 
 
@@ -128,7 +129,7 @@ def create_server(host, port, number_of_drones):
     return gcs_server
 
 
-# gcs_server = create_server('127.0.0.1', 9999, 1)
-# gcs_server.create_socket()
-# gcs_server.accept_conn()
-# gcs_server.send_commands()
+gcs_server = create_server('127.0.0.1', 9999, 1)
+gcs_server.create_socket()
+gcs_server.accept_conn()
+gcs_server.send_commands()
