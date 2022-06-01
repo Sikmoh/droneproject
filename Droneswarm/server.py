@@ -129,7 +129,7 @@ def create_server(host, port, number_of_drones):
     return gcs_server
 
 
-gcs_server = create_server('127.0.0.1', 9999, 1)
-gcs_server.create_socket()
-gcs_server.accept_conn()
-gcs_server.send_commands()
+# gcs_server = create_server('127.0.0.1', 9999, 1)
+# gcs_server.create_socket()
+# gcs_server.accept_conn()
+# gcs_server.send_commands()
