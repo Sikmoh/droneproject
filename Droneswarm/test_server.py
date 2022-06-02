@@ -19,8 +19,8 @@ class Test(TestCase):
         # this is from the client
         client = create_drone('127.0.0.1', 9999)
         client.socket_conn()
+        assert gcs.host == '127.0.0.1'
+        assert gcs.port == 9999
         client.s.close()
-
-        self.assertRaises(socket.error)
         gcs_thread.join()
         gcs.s.close()
