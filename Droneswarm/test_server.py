@@ -1,3 +1,4 @@
+import socket
 import threading
 from unittest import TestCase
 
@@ -20,5 +21,6 @@ class Test(TestCase):
         client.socket_conn()
         client.s.close()
 
+        self.assertRaises(socket.error)
         gcs_thread.join()
         gcs.s.close()
