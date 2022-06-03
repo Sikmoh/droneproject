@@ -10,21 +10,13 @@ class Test(TestCase):
     def test_server_host(self):
         gcs = create_server('127.0.0.1', 9999, 1)
         gcs.create_socket()
-
-        client = create_drone('127.0.0.1', 9999)
-        client.socket_conn()
         self.assertEqual(gcs.host, '127.0.0.1')
-        client.s.close()
         gcs.s.close()
 
     def test_server_port(self):
         gcs = create_server('127.0.0.1', 9999, 1)
         gcs.create_socket()
-
-        client = create_drone('127.0.0.1', 9999)
-        client.socket_conn()
         self.assertEqual(gcs.port, 9999)
-        client.s.close()
         gcs.s.close()
 
     def test_server_client_sockets(self):
