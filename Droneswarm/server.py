@@ -1,6 +1,5 @@
 #  Python Imports
 # -------------------------------------------------
-import re
 import socket
 import sys
 #  Module Imports
@@ -42,7 +41,8 @@ class DroneServer:
             print("Socket creation error:" + str(msg))
 
     def accept_conn(self):
-
+        """this method creates a connection object for
+        each drone that connects to the socket """
         while True:
             try:
                 conn, address = self.s.accept()
@@ -58,6 +58,7 @@ class DroneServer:
                         for c in self.all_connections:
                             self.conn_dict[self.all_addresses[n][0]] = self.all_connections[n]
                             n += 1
+
                             print(self.conn_dict)
 
                         break
@@ -131,7 +132,7 @@ def create_server(host, port, number_of_drones):
     return gcs_server
 
 
-gcs_server = create_server('127.0.0.1', 9999, 1)
-gcs_server.create_socket()
-gcs_server.accept_conn()
-gcs_server.send_commands()
+# gcs_server = create_server('127.0.0.1', 9999, 1)
+# gcs_server.create_socket()
+# gcs_server.accept_conn()
+# gcs_server.send_commands()
