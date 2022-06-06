@@ -3,7 +3,7 @@
 import socket
 import tqdm
 import os
-import logging
+
 
 
 #  Module Imports
@@ -40,7 +40,6 @@ class DroneServer:
             self.s.listen(5)
 
         except socket.error as msg:
-            logging.exception("Exception occurred")
             print("Socket creation error:" + str(msg))
 
     def accept_conn(self):
