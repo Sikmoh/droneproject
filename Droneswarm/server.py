@@ -54,15 +54,6 @@ class DroneServer:
 
                 print("Connection has been established :" + address[0])
                 if len(self.all_addresses) == self.__drone_number:
-                    n = 0
-                    for i in self.all_addresses:
-                        for c in self.all_connections:
-                            self.conn_dict[self.all_addresses[n][0]] = self.all_connections[n]
-                            n += 1
-
-                            print(self.conn_dict)
-
-                        break
                     break
 
             except socket.error as msg:
