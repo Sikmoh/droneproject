@@ -17,7 +17,6 @@ class DroneServer:
         self.s = socket.socket()
         self.all_connections = []
         self.all_addresses = []
-        self.conn_dict = {}
 
     @property
     def host(self):
@@ -145,7 +144,7 @@ def create_server(host, port, number_of_drones):
 
 
 # code below is executed in a different script, its just here for reference
-gcs_server = create_server('127.0.0.1', 9999, 1)
-gcs_server.create_socket()
-gcs_server.accept_conn()
-gcs_server.send_commands()
+# gcs_server = create_server('127.0.0.1', 9999, 1)
+# gcs_server.create_socket()
+# gcs_server.accept_conn()
+# gcs_server.send_commands()
