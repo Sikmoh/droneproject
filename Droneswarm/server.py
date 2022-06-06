@@ -1,11 +1,13 @@
 #  Python Imports
 # -------------------------------------------------
 import socket
-import sys
+import tqdm
+import os
+import logging
+
+
 #  Module Imports
 # -------------------------------------------------
-from Drone_utils.utils import *
-
 
 class DroneServer:
 
@@ -38,6 +40,7 @@ class DroneServer:
             self.s.listen(5)
 
         except socket.error as msg:
+            logging.exception("Exception occurred")
             print("Socket creation error:" + str(msg))
 
     def accept_conn(self):
@@ -65,6 +68,7 @@ class DroneServer:
                     break
 
             except socket.error as msg:
+                logging.exception("Exception occurred")
                 print("Error accepting connections" + str(msg))
 
 
@@ -77,7 +81,6 @@ class RunServer(DroneServer):
             cmd = input('Welcome to ALAB firefly show.Start show here: ')
             if cmd == 'quit':
                 self.s.close()
-                sys.exit()
             elif cmd == 'arm{}'.format(cmd[-2:]):
                 for i in self.all_connections:
                     i.send(str.encode(cmd))
@@ -98,7 +101,7 @@ class RunServer(DroneServer):
                     i.send(str.encode(cmd))
             elif cmd == 'upload':
                 print('Path upload in progress')
-                upload_path(self)
+                self.upload_path()
             elif cmd:
                 self.get_target(cmd)
 
@@ -126,12 +129,33 @@ class RunServer(DroneServer):
         except cmd != 'select':
             print("Selection not valid")
 
+    def upload_path(self):
+        SEPARATOR = "<SEPARATOR>"
+        BUFFER_SIZE = 1048576  # 1MB
+        filename = "paths.json"
+        filesize = os.path.getsize(filename)
+        for i in self.all_connections:
+            i.send(f"{filename}{SEPARATOR}{filesize}".encode())
+            progress = tqdm.tqdm(range(filesize), f"Sending {filename}", unit="B", unit_scale=True, unit_divisor=1024)
+            with open(filename, "rb") as f:
+                while True:
+                    # read the bytes from the file
+                    bytes_read = f.read(BUFFER_SIZE)
+                    if not bytes_read:
+                        # file transmitting is done
+                        break
+                    # we use sendall to assure transmission in
+                    # busy networks
+                    i.sendall(bytes_read)
+                    # update the progress bar
+                    progress.update(len(bytes_read))
+
 
 def create_server(host, port, number_of_drones):
     gcs_server = RunServer(host, port, number_of_drones)
     return gcs_server
 
-
+# code below is executed in a different script, its just here for reference
 # gcs_server = create_server('127.0.0.1', 9999, 1)
 # gcs_server.create_socket()
 # gcs_server.accept_conn()
