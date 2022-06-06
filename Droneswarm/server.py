@@ -5,7 +5,6 @@ import tqdm
 import os
 
 
-
 #  Module Imports
 # -------------------------------------------------
 
@@ -67,7 +66,6 @@ class DroneServer:
                     break
 
             except socket.error as msg:
-                logging.exception("Exception occurred")
                 print("Error accepting connections" + str(msg))
 
 
@@ -154,8 +152,9 @@ def create_server(host, port, number_of_drones):
     gcs_server = RunServer(host, port, number_of_drones)
     return gcs_server
 
+
 # code below is executed in a different script, its just here for reference
-# gcs_server = create_server('127.0.0.1', 9999, 1)
-# gcs_server.create_socket()
-# gcs_server.accept_conn()
-# gcs_server.send_commands()
+gcs_server = create_server('127.0.0.1', 9999, 1)
+gcs_server.create_socket()
+gcs_server.accept_conn()
+gcs_server.send_commands()
