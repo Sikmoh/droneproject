@@ -5,9 +5,16 @@
     <title>AEROLAB DRONESHOW</title>
 </head>
 <body>
-    <di class="container">
-        <h1>WELCOME TO THE GROUNDSTATION</h1>
-    </di>
+    <main>
+        <div class="container">
+            <h1>WELCOME TO THE GROUNDSTATION</h1>
+            <form id="server"  action="{{url_for('connect_ground_station')}}" class="form1">
+                <input type="text" name="number_of_drones" placeholder="drones">
+                <input type="submit" name="" value="create-server">
+            </form>
+        </div>
 
+    </main>
+    <!-- javascript -->
 </body>
 </html>
