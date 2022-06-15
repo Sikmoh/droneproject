@@ -59,6 +59,7 @@ class RunServer(DroneServer):
 
     def send_commands(self, cmd):
         # You can only send a command to a connection
+        print(cmd)
         while True:
             if cmd == 'quit':
                 self.s.close()
@@ -88,7 +89,6 @@ class RunServer(DroneServer):
 
             else:
                 pass
-                print('unknown command,no action taken')
 
     def get_target(self, cmd):
         # use this to select a target drone
@@ -135,7 +135,6 @@ class RunServer(DroneServer):
 def create_server(host, port):
     gcs_server = RunServer(host, port)
     return gcs_server
-
 
 # code below is executed in a different script, its just here for reference
 # gcs_server = create_server('127.0.0.1', 9999, 1)
