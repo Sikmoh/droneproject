@@ -60,7 +60,6 @@ class RunServer(DroneServer):
     def send_commands(self, cmd):
         # You can only send a command to a connection
         while True:
-            #cmd = input('Welcome to ALAB firefly show.Start show here: ')
             if cmd == 'quit':
                 self.s.close()
             elif cmd == 'arm{}'.format(cmd[-2:]):
