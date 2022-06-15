@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from dronelib.server import create_server
 
 application = Flask(__name__)
@@ -12,8 +12,9 @@ def index():
     return render_template('index.html')
 
 
-@application.route('/connect/<number>')
-def connect_ground_station(number):
+@application.route('/')
+def connect_ground_station():
+    number = request.args.get("number_of_drones")
     gcs.create_socket()
     gcs.accept_conn(number)
     return 'socket server created successfully'
