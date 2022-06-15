@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+
 from dronelib.server import create_server
 
 application = Flask(__name__)
@@ -12,17 +13,21 @@ def index():
     return render_template('index.html')
 
 
-@application.route('/')
+@application.route('/', methods=["GET", 'POST'])
 def connect_ground_station():
-    number = request.args.get("number_of_drones")
-    gcs.create_socket()
-    gcs.accept_conn(number)
-    return 'socket server created successfully'
+    if request.method == "POST":
+        number = request.form.get("number_of_drones")
+        gcs.create_socket()
+        gcs.accept_conn(number)
+        #return render_template("send.html")
 
 
-@application.route('/command/<cmd>')
-def send_commands(cmd):
-    gcs.send_commands(cmd)
+@application.route('/commands', methods=["GET", "POST"])
+def send_commands():
+    if request.method == "POST":
+        cmd = request.form.get("command")
+        gcs.send_commands(cmd)
+        #return render_template("form.html")
 
 
 if __name__ == '__main__':

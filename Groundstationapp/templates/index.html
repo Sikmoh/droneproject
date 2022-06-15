@@ -8,12 +8,18 @@
     <main>
         <div class="container">
             <h1>WELCOME TO THE GROUNDSTATION</h1>
-            <form id="server"  action="{{url_for('connect_ground_station')}}" class="form1">
+            <form action="{{url_for('connect_ground_station')}}"  method="post">
                 <input type="text" name="number_of_drones" placeholder="drones">
-                <input type="submit" name="" value="create-server">
+                <input type="submit" name="" value='connect'>
             </form>
         </div>
-
+        <div class="container">
+            <h2>Send commands here</h2>
+            <form action="{{url_for('send_commands')}}"  method="post">
+                <input type="text" name="command" placeholder="action">
+                <input type="submit" value="send">
+            </form>
+        </div>
     </main>
     <!-- javascript -->
 </body>
