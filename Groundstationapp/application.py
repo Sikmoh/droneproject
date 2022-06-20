@@ -1,3 +1,4 @@
+import json
 import re
 import MySQLdb
 from flask import Flask, render_template, request, redirect, url_for, session
@@ -9,7 +10,7 @@ app = Flask(__name__)
 # IP AND PORT ARE STATIC SO NO NEED TO SET EVERYTIME
 gcs = create_server('127.0.0.1', 9999)
 
-#app.secret_key = "my-secret-key"
+app.secret_key = "my-secret-key"
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
@@ -88,6 +89,16 @@ def send_commands():
     if request.method == "POST":
         cmd = request.form.get("command")
         gcs.send_commands(cmd)
+
+
+@app.route("/recv", methods=["GET", 'POST'])
+def recv_telem():
+    if request.method == "POST":
+        data = request.get_json()
+        telemetry = json.dumps(data)
+        with open('TELEMETRY_FILE', 'w') as f:
+            f.write(telemetry)
+        return 'streaming telemetry'
 
 
 if __name__ == '__main__':
