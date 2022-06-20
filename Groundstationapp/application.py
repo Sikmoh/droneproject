@@ -1,12 +1,18 @@
 import json
 import re
 import MySQLdb
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 import MySQLdb.cursors
 from dronelib.server import create_server
 from flask_mysqldb import MySQL
+import os
+from werkzeug.utils import secure_filename
+
+UPLOAD_FOLDER = 'C:/Users/SIKIRU/Desktop/Droneproject/Groundstationapp/dronelib'
+ALLOWED_EXTENSIONS = {'json'}
 
 app = Flask(__name__)
+
 # IP AND PORT ARE STATIC SO NO NEED TO SET EVERYTIME
 gcs = create_server('127.0.0.1', 9999)
 
@@ -18,8 +24,10 @@ app.config['MYSQL_PASSWORD'] = '00Apassword7'
 app.config['MYSQL_DB'] = 'aerolab'
 
 mysql_obj = MySQL(app)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
+# --------------user and login------------------------------------
 @app.route('/')
 @app.route('/login', methods=["GET", "POST"])
 def login():
@@ -76,6 +84,7 @@ def register():
     return render_template('register.html', msg=msg)
 
 
+# -------------- setup server-------------------------
 @app.route('/connect', methods=["GET", 'POST'])
 def connect_ground_station():
     if request.method == "POST":
@@ -84,6 +93,7 @@ def connect_ground_station():
         gcs.accept_conn(number)
 
 
+# -----------send command------------------------------
 @app.route('/commands', methods=["GET", "POST"])
 def send_commands():
     if request.method == "POST":
@@ -91,6 +101,7 @@ def send_commands():
         gcs.send_commands(cmd)
 
 
+# -------------stream telemetry---------------
 @app.route("/recv", methods=["GET", 'POST'])
 def recv_telem():
     if request.method == "POST":
@@ -99,6 +110,31 @@ def recv_telem():
         with open('TELEMETRY_FILE', 'w') as f:
             f.write(telemetry)
         return 'streaming telemetry'
+
+
+# ----------------------file upload------------------
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # If the user does not select a file, the browser submits an
+        # empty file without a filename.
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return render_template('index.html')
 
 
 if __name__ == '__main__':
