@@ -8,6 +8,7 @@
     <main>
         <div class="container">
             <h1>WELCOME TO THE GROUNDSTATION</h1>
+            <h2>Connect to socket server</h2>
             <form action="{{url_for('connect_ground_station')}}"  method="post">
                 <input type="text" name="number_of_drones" placeholder="drones">
                 <input type="submit" name="" value='connect'>
@@ -20,6 +21,7 @@
                 <input type="submit" value="send">
             </form>
         </div>
+        <a href="{{ url_for('logout') }}" class="btn">Logout</a>
     </main>
     <!-- javascript -->
 </body>
