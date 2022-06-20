@@ -8,7 +8,7 @@ import os
 #  Module Imports
 # -------------------------------------------------
 
-class DroneServer:
+class ServerInit:
 
     def __init__(self, host: str, port: int):
         self.__host = host
@@ -54,7 +54,7 @@ class DroneServer:
                 print("Error accepting connections" + str(msg))
 
 
-class RunServer(DroneServer):
+class RunServer(ServerInit):
     """These methods are used to run the server"""
 
     def send_commands(self, cmd):
