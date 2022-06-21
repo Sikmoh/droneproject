@@ -14,7 +14,7 @@ ALLOWED_EXTENSIONS = {'json'}
 app = Flask(__name__)
 
 # IP AND PORT ARE STATIC SO NO NEED TO SET EVERYTIME
-gcs = create_server('127.0.0.1', 9999)
+gcs = create_server('192.168.255.223', 9999)
 
 app.secret_key = "my-secret-key"
 
@@ -23,7 +23,7 @@ app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = '00Apassword7'
 app.config['MYSQL_DB'] = 'aerolab'
 
-mysql_obj = MySQL(app)
+db = MySQL(app)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
@@ -35,7 +35,7 @@ def login():
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
         password = request.form['password']
-        cursor = mysql_obj.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM accounts WHERE username = % s AND password = % s', (username, password,))
         account = cursor.fetchone()
         if account:
@@ -64,7 +64,7 @@ def register():
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
-        cursor = mysql_obj.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor = db.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM accounts WHERE username = % s', (username,))
         account = cursor.fetchone()
         if account:
@@ -77,7 +77,7 @@ def register():
             msg = 'Please fill out the form !'
         else:
             cursor.execute('INSERT INTO accounts VALUES (NULL, % s, % s, % s)', (username, password, email,))
-            mysql_obj.connection.commit()
+            db.connection.commit()
             msg = 'You have successfully registered !'
     elif request.method == 'POST':
         msg = 'Please fill out the form !'
