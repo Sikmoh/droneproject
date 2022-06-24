@@ -90,19 +90,16 @@ class RunServer(ServerInit):
             else:
                 pass
 
-    def get_target(self, cmd):
+    def get_target(self, number, cmd=None):
         # use this to select a target drone
         # Welcome to ALAB firefly show.Start show here: select 0 or 1...
         # Press enter to exit from target command section
         try:
-            target = cmd.replace('select ', '')  # target = id of drone
-
-            drone_id = int(target)
+            drone_id = int(number)
             conn = self.all_connections[drone_id]
             print("You are now connected to :" + str(self.all_addresses[drone_id][0]))
             print(str(self.all_addresses[drone_id][0]) + ">", end="")
             while True:
-                cmd = input('send command to drone:')
                 if cmd:
                     conn.send(str.encode(cmd))
                 else:

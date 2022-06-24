@@ -14,10 +14,10 @@ ALLOWED_EXTENSIONS = {'json'}
 app = Flask(__name__)
 
 # IP AND PORT ARE STATIC SO NO NEED TO SET EVERYTIME
-gcs = create_server('192.168.255.223', 9999)
+gcs = create_server('127.0.0.1', 9999)
 
+# -----------database setup------------
 app.secret_key = "my-secret-key"
-
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = '00Apassword7'
@@ -43,7 +43,7 @@ def login():
             session['id'] = account['id']
             session['username'] = account['username']
             msg = 'Logged in successfully !'
-            return render_template('index.html', msg=msg)
+            return render_template('base.html', msg=msg)
         else:
             msg = 'Incorrect username / password !'
     return render_template('login.html', msg=msg)
@@ -101,6 +101,20 @@ def send_commands():
         gcs.send_commands(cmd)
 
 
+# ----------------select drone---------------------
+@app.route('/select', methods=["GET", "POST"])
+def select_drone():
+    if request.method == "POST":
+        number = request.form.get("drone-id")
+        if request.form.get("return") == 'rtn':
+            gcs.get_target(number, "RTL")
+        elif request.form.get("land") == "land":
+            gcs.get_target(number, "land")
+        elif request.form.get("disarm") == "disarm":
+            gcs.get_target(number, "disarm")
+        return render_template("base.html")
+
+
 # -------------stream telemetry---------------
 @app.route("/recv", methods=["GET", 'POST'])
 def recv_telem():
@@ -134,7 +148,8 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return render_template('index.html')
+            gcs.upload_path()
+            return render_template('base.html')
 
 
 if __name__ == '__main__':

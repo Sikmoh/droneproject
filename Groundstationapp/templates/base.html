@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>AEROLAB GCS</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <nav>
+       <img src="icon.png.jpg" alt="">
+       <h1 id="clock"></h1>
+       <a href="{{ url_for('logout') }}" class="logout">Logout</a>
+    </nav>
+    <section>
+
+    </section>
+    <footer>
+        <div class="grid-container">
+            <div class="container">
+               <form action="{{url_for('connect_ground_station')}}" class="server-init" method="post">
+                <label for="numofdrones" style="font-family:monospace ;">Enter No. of drones</label>
+                <input type="number" min="1" id="numofdrones" placeholder="drones">
+                <input type="submit" name="" value='Connect Server'>
+               </form>
+            </div>
+            <div class="container">
+                <form action="{{url_for('upload_file')}}" class="submit-file">
+                    <input type="file" name="filename" id="select-file" class="select-file">
+                    <button type="submit" id="upload-file">Upload</button>
+                </form>
+
+            </div>
+            <div class="container">
+                <form action="{{url_for('select_drone')}}" class="drone-selection">
+                    <label for="drone-id"> Select Drone</label>
+                    <input type="number" name="drone-id" id="drone-id">
+                    <button style="border: none; font-family:monospace; font-weight:bold; border-radius:3px; background-color: yellow;" name="return" value="rtn">RTN</button>
+                    <button style="border: none; font-family:monospace; font-weight:bold; border-radius:3px; background-color: rgb(124, 185, 124);" name="land" value="land" >LAND</button>
+                    <button style="border: none; font-family:monospace; font-weight:bold; border-radius:3px; background-color: rgb(233, 42, 42);" name="disarm" value="disarm">DISARM</button>
+                </form>
+            </div>
+            <div class="swarm-button">
+            <form action="{{url_for('send_commands')}}"  method="post">
+                <input type="text" name="command" placeholder="action">
+                <input type="submit" value="TAKEOFF">
+            </form>
+            <button style="font-size: 1.9em; background-color:rgb(49, 166, 245); border:none; padding:5px;font-family: monospace;" value="dance">DANCE</button>
+            <button style="font-size: 1.9em; background-color:green; border:none; padding:5px;font-family: monospace;" value="land">LAND</button>
+            <button style="font-size: 1.9em; background-color:red; border:none; padding:5px;font-family: monospace;" value="disarm">DISARM</button>
+            </div>
+        </div>
+    </footer>
+</body>
+<script>
+    setInterval(showTime, 1000);
+    function showTime() {
+        let time = new Date();
+        let hour = time.getHours();
+        let min = time.getMinutes();
+        let sec = time.getSeconds();
+        am_pm = "AM";
+
+        if (hour > 12) {
+            hour -= 12;
+            am_pm = "PM";
+        }
+        if (hour == 0) {
+            hr = 12;
+            am_pm = "AM";
+        }
+
+        hour = hour < 10 ? "0" + hour : hour;
+        min = min < 10 ? "0" + min : min;
+        sec = sec < 10 ? "0" + sec : sec;
+
+        let currentTime = hour + ":"
+            + min + ":" + sec + am_pm;
+
+        document.getElementById("clock")
+            .innerHTML = currentTime;
+    }
+
+    showTime();
+</script>
+</html>
