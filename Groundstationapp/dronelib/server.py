@@ -49,6 +49,7 @@ class ServerInit:
                 print("Connection has been established :" + address[0])
                 if len(self.all_addresses) == drone_number:
                     break
+                break
 
             except socket.error as msg:
                 print("Error accepting connections" + str(msg))
@@ -84,13 +85,11 @@ class RunServer(ServerInit):
             elif cmd == 'upload':
                 print('Path upload in progress')
                 self.upload_path()
-            elif cmd:
-                self.get_target(cmd)
-
             else:
                 pass
+            break
 
-    def get_target(self, number, cmd=None):
+    def get_target(self, number, cmd):
         # use this to select a target drone
         # Welcome to ALAB firefly show.Start show here: select 0 or 1...
         # Press enter to exit from target command section
@@ -98,13 +97,12 @@ class RunServer(ServerInit):
             drone_id = int(number)
             conn = self.all_connections[drone_id]
             print("You are now connected to :" + str(self.all_addresses[drone_id][0]))
-            print(str(self.all_addresses[drone_id][0]) + ">", end="")
-            while True:
-                if cmd:
-                    conn.send(str.encode(cmd))
-                else:
-                    break
-        except cmd != 'select':
+            # print(str(self.all_addresses[drone_id][0]) + ">", end="")
+            conn.send(str.encode(cmd))
+            print('sent')
+            print(cmd)
+
+        except cmd != 'land' or 'disarm' or 'return':
             print("Selection not valid")
 
     def upload_path(self):

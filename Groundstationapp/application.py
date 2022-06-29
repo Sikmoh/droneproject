@@ -1,12 +1,13 @@
 import json
 import re
 import MySQLdb
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 import MySQLdb.cursors
 from dronelib.server import create_server
 from flask_mysqldb import MySQL
 import os
 from werkzeug.utils import secure_filename
+from utils import send_verification_email
 
 UPLOAD_FOLDER = 'C:/Users/SIKIRU/Desktop/Droneproject/Groundstationapp/dronelib'
 ALLOWED_EXTENSIONS = {'json'}
@@ -17,7 +18,7 @@ app = Flask(__name__)
 gcs = create_server('127.0.0.1', 9999)
 
 # -----------database setup------------
-app.secret_key = "my-secret-key"
+app.secret_key = "my/secret/key/2795/17/132/moh"
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = '00Apassword7'
@@ -79,6 +80,7 @@ def register():
             cursor.execute('INSERT INTO accounts VALUES (NULL, % s, % s, % s)', (username, password, email,))
             db.connection.commit()
             msg = 'You have successfully registered !'
+            # send_verification_email(email, username)
     elif request.method == 'POST':
         msg = 'Please fill out the form !'
     return render_template('register.html', msg=msg)
@@ -87,31 +89,35 @@ def register():
 # -------------- setup server-------------------------
 @app.route('/connect', methods=["GET", 'POST'])
 def connect_ground_station():
+
     if request.method == "POST":
         number = request.form.get("number_of_drones")
         gcs.create_socket()
         gcs.accept_conn(number)
+        flash("server success")
+
+        return render_template('base.html')
 
 
 # -----------send command------------------------------
 @app.route('/commands', methods=["GET", "POST"])
 def send_commands():
     if request.method == "POST":
-        cmd = request.form.get("command")
+        cmd = request.form.get("cmd")
         gcs.send_commands(cmd)
+        flash("operation success")
+        return render_template('base.html')
 
 
 # ----------------select drone---------------------
 @app.route('/select', methods=["GET", "POST"])
 def select_drone():
-    if request.method == "POST":
-        number = request.form.get("drone-id")
-        if request.form.get("return") == 'rtn':
-            gcs.get_target(number, "RTL")
-        elif request.form.get("land") == "land":
-            gcs.get_target(number, "land")
-        elif request.form.get("disarm") == "disarm":
-            gcs.get_target(number, "disarm")
+    if request.args['drone-id'] and request.args['cmd']:
+        number = request.args.get('drone-id')
+        cmd = request.args.get('cmd')
+        print(number)
+        print(cmd)
+        gcs.get_target(number, cmd)
         return render_template("base.html")
 
 

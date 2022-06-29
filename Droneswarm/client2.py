@@ -5,17 +5,18 @@
 import socket
 import time
 import json
-from gpiozero import RGBLED
+import tqdm
+#from gpiozero import RGBLED
 #import netifaces as ni
 import threading
 
 
-class ClientSocket:
+class ClientInit:
     def __init__(self, host, port):
         self.host = host
         self.port = port
         self.s = socket.socket()
-        #self.vehicle = connect('172.17.0.1:14550', wait_ready=None)
+        #self.vehicle = connect('192.168.255.29:14550', wait_ready=None)
         #self.id = (int((ni.ifaddresses('wlan0')[ni.AF_INET][0]['addr'])[-1])) - 1
         #self.led = RGBLED(21, 20, 22)
 
@@ -26,7 +27,7 @@ class ClientSocket:
         print("connection successful, ready for takeoff")
 
 
-class RunDrone(ClientSocket):
+class RunDrone(ClientInit):
 
     def path(self):
         with open("/downs/paths.json", 'r') as f:
@@ -46,7 +47,6 @@ class RunDrone(ClientSocket):
                 loop_number += 1
 
     def arm_and_takeoff(self, target_altitude):
-
         while not self.vehicle.is_armable:
             print("WAITING FOR VEHICLE TO BECOME ARMABLE")
             time.sleep(1)
@@ -74,6 +74,8 @@ class RunDrone(ClientSocket):
 
         while True:
             try:
+                #t1 = threading.Thread(target=self.telemetry_data())
+                #t1.start()
                 data = self.s.recv(8192)
                 if data[:3].decode("utf-8") == 'arm':
                     alt = int(data[-2:].decode("utf-8"))
@@ -90,8 +92,8 @@ class RunDrone(ClientSocket):
                         elif coord == 'disarm':
                             self.vehicle.mode = VehicleMode('DISARM')
                         elif coord == 'start':
-                            t = threading.Thread(target=self.path())
-                            t.start()
+                            t2 = threading.Thread(target=self.path())
+                            t2.start()
                         else:
                             pass
 
@@ -104,11 +106,50 @@ class RunDrone(ClientSocket):
                 print(msg, 'Error, GCS disconnected')
                 break
 
+    def download(self):
+        SEPARATOR = "<SEPARATOR>"
+        BUFFER_SIZE = 1048576  # 1MB
+        data = self.s.recv(BUFFER_SIZE).decode()
+        file, size = data.split(SEPARATOR)
+        filesize = int(size)
+        progress = tqdm.tqdm(range(filesize), f"Receiving {file}", unit="B", unit_scale=True, unit_divisor=1024)
+        with open(file, "wb") as f:
+            while True:
+                # read 1024 bytes from the socket (receive)
+
+                bytes_read = self.s.recv(BUFFER_SIZE)
+                if not bytes_read:
+                    #     # nothing is receive
+                    #     # file transmitting is done
+                    break
+                # write to the file the bytes we just received
+                f.write(bytes_read)
+                # update the progress bar
+                progress.update(len(bytes_read))
+
+        f.close()
+        s.close()
+
+    # def telemetry_data(self):
+    #     url = "http://127.0.0.1:5003/recv"
+    #     while True:
+    #         telemetry_dict = {
+    #             "id": self.id,
+    #             "GPS": self.vehicle.gps_0,
+    #             "Battery": self.vehicle.battery,
+    #             "Attitude": self.vehicle.attitude,
+    #             "System-status": self.vehicle.system_status.state,
+    #             "Vehicle-mode": self.vehicle.mode.name,
+    #             "EKF ok?": self.vehicle.ekf_ok
+    #         }
+    #         packet_str = json.dumps(telemetry_dict)
+    #         send_telemetry = requests.post(url, json=packet_str)
+    #         time.sleep(5)
+
 
 def create_drone(host, port):
     drone = RunDrone(host, port)
     return drone
-
 
 # drone = create_drone('127.0.0.1', 9999)
 # drone.socket_conn()

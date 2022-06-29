@@ -24,11 +24,13 @@ class Test(TestCase):
         gcs_thread = threading.Thread(target=gcs.create_socket())
         gcs_thread.start()
 
-        # this is from the client
+        # this is from client
         client = create_drone('127.0.0.1', 9999)
         client.socket_conn()
         assert gcs.number_of_drones == 1
         assert len(gcs.all_connections) == 0
-        client.s.close()
         gcs_thread.join()
+        client.s.close()
         gcs.s.close()
+
+
