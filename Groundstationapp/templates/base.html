@@ -35,7 +35,7 @@
             <div class="container">
                 <form action="{{url_for('upload_file')}}" class="submit-file">
                     <input type="file" name="filename" id="select-file" class="select-file">
-                    <button type="submit" id="upload-file">Upload</button>
+                    <button style="background-color: green;" type="submit" id="upload-file">Upload</button>
                 </form>
 
             </div>
@@ -44,7 +44,7 @@
                     <label for="drone-id"> Select Drone</label>
                     <input type="number" name="drone-id" id="drone-id">
                     <button style="border: none; font-family:monospace; font-weight:bold; border-radius:3px; background-color: yellow;" name="cmd" value="rtn">RTN</button>
-                    <button style="border: none; font-family:monospace; font-weight:bold; border-radius:3px; background-color: rgb(124, 185, 124);" name="cmd" value="land" >LAND</button>
+                    <button style="border: none; font-family:monospace; font-weight:bold; border-radius:3px; background-color: green;" name="cmd" value="land" >LAND</button>
                     <button style="border: none; font-family:monospace; font-weight:bold; border-radius:3px; background-color: rgb(233, 42, 42);" name="cmd" value="disarm">DISARM</button>
                 </form>
 
@@ -54,16 +54,16 @@
                     <input type="submit" value="TAKEOFF">
                 </form>
                 <form action="{{url_for('send_commands')}}"  method="post">
-                <button style="font-size: 1.5em; background-color:white; border:none; padding:5px;font-family: monospace;" name="cmd" value="test">LIGHT</button>
+                <button style="font-size: 1.5em; background-color:white; border-radius: 5px; border:none; padding:5px;font-family: monospace;" name="cmd" value="test">LIGHT</button>
                 </form>
                 <form action="{{url_for('send_commands')}}"  method="post">
-                <button style="font-size: 1.5em; background-color:rgb(49, 166, 245); border:none; padding:5px;font-family: monospace;" name="cmd" value="start">DANCE</button>
+                <button style="font-size: 1.5em; background-color:rgb(49, 166, 245); border-radius: 5px; border:none; padding:5px;font-family: monospace;" name="cmd" value="start">DANCE</button>
                 </form>
                 <form action="{{url_for('send_commands')}}"  method="post">
-                <button style="font-size: 1.5em; background-color:green; border:none; padding:5px;font-family: monospace;" name="cmd" value="land">LAND</button>
+                <button style="font-size: 1.5em; background-color:green; border-radius: 5px; border:none; padding:5px;font-family: monospace;" name="cmd" value="land">LAND</button>
                 </form>
                 <form action="{{url_for('send_commands')}}"  method="post">
-                <button style="font-size: 1.5em; background-color:red; border:none; padding:5px;font-family: monospace;" name="cmd" value="disarm">DISARM</button>
+                <button style="font-size: 1.5em; background-color:red; border-radius: 5px;border:none; padding:5px;font-family: monospace;" name="cmd" value="disarm">DISARM</button>
                 </form>
             </div>
             </div>

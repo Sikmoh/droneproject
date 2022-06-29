@@ -128,7 +128,7 @@ footer .grid-container{
 }
 
 footer .grid-container .container{
-    background-color: rgba(71, 69, 69, 0.384);
+
     height: 100%;
     border-right: 1px solid black;
 }
@@ -216,12 +216,13 @@ footer .drone-selection button{
 }
 
 footer .swarm-button{
-    padding: 10px;
+    padding: 5px;
     width: max-content;
-    display: flex;
+    display: grid;
     align-items: center;
+    justify-content: center;
     border: none;
-    border-radius: 5px;
+
 }
 
 footer .takeoff input[type='text']{
