@@ -35,7 +35,7 @@ class ServerInit:
         except socket.error as msg:
             print("Socket creation error:" + str(msg))
 
-    def accept_conn(self, drone_number):
+    def accept_conn(self, drone_number: int):
         """this method creates a connection object for
         each drone that connects to the socket """
         while True:
@@ -49,7 +49,6 @@ class ServerInit:
                 print("Connection has been established :" + address[0])
                 if len(self.all_addresses) == drone_number:
                     break
-                break
 
             except socket.error as msg:
                 print("Error accepting connections" + str(msg))
@@ -82,9 +81,6 @@ class RunServer(ServerInit):
             elif cmd == 'disarm':
                 for i in self.all_connections:
                     i.send(str.encode(cmd))
-            elif cmd == 'upload':
-                print('Path upload in progress')
-                self.upload_path()
             else:
                 pass
             break
@@ -106,12 +102,10 @@ class RunServer(ServerInit):
             print("Selection not valid")
 
     def upload_path(self):
-        SEPARATOR = "<SEPARATOR>"
-        BUFFER_SIZE = 1048576  # 1MB
-        filename = "paths.json"
+        BUFFER_SIZE = 5048576  # 5MB
+        filename = "C:/Users/SIKIRU/Desktop/Droneproject/Groundstationapp/uploads/paths.json"
         filesize = os.path.getsize(filename)
         for i in self.all_connections:
-            i.send(f"{filename}{SEPARATOR}{filesize}".encode())
             progress = tqdm.tqdm(range(filesize), f"Sending {filename}", unit="B", unit_scale=True, unit_divisor=1024)
             with open(filename, "rb") as f:
                 while True:
@@ -125,6 +119,8 @@ class RunServer(ServerInit):
                     i.sendall(bytes_read)
                     # update the progress bar
                     progress.update(len(bytes_read))
+
+            f.close()
 
 
 def create_server(host, port):

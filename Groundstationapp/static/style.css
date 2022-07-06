@@ -128,11 +128,20 @@ footer .grid-container{
 }
 
 footer .grid-container .container{
-
     height: 100%;
     border-right: 1px solid black;
 }
 
+footer .container input[type='submit']{
+    background-color: rgb(39, 119, 70);
+    padding: 7px;
+    color: white;
+    cursor: pointer;
+    border: none;
+    font-family: monospace;
+    font-weight: bold;
+    border-radius: 5px;
+}
 footer .server-init{
     border: 1px dashed white;
     width:90%;

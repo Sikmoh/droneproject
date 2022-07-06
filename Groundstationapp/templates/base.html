@@ -10,7 +10,7 @@
 </head>
 <body>
     <nav>
-       <img  src="icon.jpg" alt="" >
+       <img  src="C:/Users/SIKIRU/Desktop/Droneproject/Groundstationapp/images/icon.jpg" alt="" >
        <h1 id="clock"></h1>
        <form action="{{ url_for('logout') }}">
            <button class="logout">Logout</button>
@@ -18,40 +18,40 @@
 
     </nav>
     <section>
+    {% extends "layout.html" %}
+    {% block body %}
+    <div class="msg">{{ msg }}</div>
 
     </section>
 
     <footer>
-        {% extends "layout.html" %}
-        {% block body %}
+
         <div class="grid-container">
             <div class="container">
                <form action="{{url_for('connect_ground_station')}}" class="server-init" method="post">
-                <label for="numofdrones" style="font-family:monospace ;">Enter No. of drones</label>
-                <input type="number" min="1" id="numofdrones" placeholder="drones">
-                <input type="submit" name="" value='Connect Server'>
+                <button style="font-size: 1.5em; background-color:green; border-radius: 5px; border:none; padding:5px;font-family: monospace;" name="cmd" value="server">CONNECT SERVER</button>
                </form>
             </div>
             <div class="container">
-                <form action="{{url_for('upload_file')}}" class="submit-file">
-                    <input type="file" name="filename" id="select-file" class="select-file">
-                    <button style="background-color: green;" type="submit" id="upload-file">Upload</button>
+                <form method="post" enctype=multipart/form-data action="{{url_for('upload_file')}}" class="submit-file" >
+                    <input type="file" name="file" id="select-file" class="select-file">
+                    <input type="submit" id="upload-file" value="Upload">
                 </form>
-
             </div>
             <div class="container">
                 <form action="{{url_for('select_drone')}}" class="drone-selection" method="post">
                     <label for="drone-id"> Select Drone</label>
                     <input type="number" name="drone-id" id="drone-id">
-                    <button style="border: none; font-family:monospace; font-weight:bold; border-radius:3px; background-color: yellow;" name="cmd" value="rtn">RTN</button>
+                    <button style="border: none; font-family:monospace; font-weight:bold; border-radius:3px; background-color: yellow;" name="cmd" value="rtl">RTL</button>
                     <button style="border: none; font-family:monospace; font-weight:bold; border-radius:3px; background-color: green;" name="cmd" value="land" >LAND</button>
                     <button style="border: none; font-family:monospace; font-weight:bold; border-radius:3px; background-color: rgb(233, 42, 42);" name="cmd" value="disarm">DISARM</button>
                 </form>
 
             <div class="swarm-button">
                 <form action="{{url_for('send_commands')}}" class="takeoff" method="post">
-                    <input type="text" name="cmd" placeholder="action">
-                    <input type="submit" value="TAKEOFF">
+                    <button style="font-size: 1.5em; background-color: red; border-radius: 5px; border:none; padding:5px;font-family: monospace;" name="cmd" value="arm">TAKE-OFF</button>
+                    <!--input type="text" name="cmd" placeholder="action"-->
+                    <!--input type="submit" value="TAKEOFF"-->
                 </form>
                 <form action="{{url_for('send_commands')}}"  method="post">
                 <button style="font-size: 1.5em; background-color:white; border-radius: 5px; border:none; padding:5px;font-family: monospace;" name="cmd" value="test">LIGHT</button>
@@ -80,7 +80,7 @@
         let sec = time.getSeconds();
         am_pm = "AM";
 
-        if (hour > 12) {
+        if (hour >= 12) {
             hour -= 12;
             am_pm = "PM";
         }

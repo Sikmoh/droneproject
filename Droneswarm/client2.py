@@ -1,13 +1,13 @@
 #!/usr/bin/python
 #  Python Imports
 # -------------------------------------------------
-#from dronekit import connect, VehicleMode, LocationGlobalRelative
+# from dronekit import connect, VehicleMode, LocationGlobalRelative
 import socket
 import time
 import json
 import tqdm
-#from gpiozero import RGBLED
-#import netifaces as ni
+# from gpiozero import RGBLED
+# import netifaces as ni
 import threading
 
 
@@ -16,9 +16,9 @@ class ClientInit:
         self.host = host
         self.port = port
         self.s = socket.socket()
-        #self.vehicle = connect('192.168.255.29:14550', wait_ready=None)
-        #self.id = (int((ni.ifaddresses('wlan0')[ni.AF_INET][0]['addr'])[-1])) - 1
-        #self.led = RGBLED(21, 20, 22)
+        # self.vehicle = connect('192.168.255.29:14550', wait_ready=None)
+        # self.id = (int((ni.ifaddresses('wlan0')[ni.AF_INET][0]['addr'])[-1])) - 1
+        # self.led = RGBLED(21, 20, 22)
 
     def socket_conn(self):
         # connect to socket opened on host and port
@@ -74,11 +74,11 @@ class RunDrone(ClientInit):
 
         while True:
             try:
-                #t1 = threading.Thread(target=self.telemetry_data())
-                #t1.start()
-                data = self.s.recv(8192)
-                if data[:3].decode("utf-8") == 'arm':
-                    alt = int(data[-2:].decode("utf-8"))
+                # t1 = threading.Thread(target=self.telemetry_data())
+                # t1.start()
+                data = self.s.recv(5048576)
+                if data[:3].decode('utf-8') == 'arm':
+                    alt = int(data[-2:].decode('utf-8'))
                     self.arm_and_takeoff(alt)
                     self.led.color = (0, 1, 0)
 
@@ -97,38 +97,26 @@ class RunDrone(ClientInit):
                         else:
                             pass
 
-                elif data[:4].decode("utf-8") == 'test':
+                elif data[:4] == 'test':
                     self.led.color = (1, 1, 1)
                 else:
-                    pass
+                    self.download(data)
+                    # t3 = threading.Thread(target=self.download(data))
+                    # t3.start()
+                    # time.sleep(5)
+                    # t3.join()
 
             except socket.error as msg:
+
                 print(msg, 'Error, GCS disconnected')
                 break
 
-    def download(self):
-        SEPARATOR = "<SEPARATOR>"
-        BUFFER_SIZE = 1048576  # 1MB
-        data = self.s.recv(BUFFER_SIZE).decode()
-        file, size = data.split(SEPARATOR)
-        filesize = int(size)
-        progress = tqdm.tqdm(range(filesize), f"Receiving {file}", unit="B", unit_scale=True, unit_divisor=1024)
-        with open(file, "wb") as f:
-            while True:
-                # read 1024 bytes from the socket (receive)
-
-                bytes_read = self.s.recv(BUFFER_SIZE)
-                if not bytes_read:
-                    #     # nothing is receive
-                    #     # file transmitting is done
-                    break
-                # write to the file the bytes we just received
-                f.write(bytes_read)
-                # update the progress bar
-                progress.update(len(bytes_read))
-
-        f.close()
-        s.close()
+    @staticmethod
+    def download(data):
+        with open('C:/Users/SIKIRU/Desktop/Droneproject/Droneswarm/paths.json', "wb") as f:
+            # write to the file the data we just received
+            f.write(data)
+        print('success')
 
     # def telemetry_data(self):
     #     url = "http://127.0.0.1:5003/recv"
