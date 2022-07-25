@@ -16,6 +16,7 @@ class ServerInit:
         self.s = socket.socket()
         self.all_connections = []
         self.all_addresses = []
+        self.new = {}
 
     @property
     def host(self):
@@ -53,6 +54,13 @@ class ServerInit:
             except socket.error as msg:
                 print("Error accepting connections" + str(msg))
 
+    def transform_ip(self):
+        for x in self.all_addresses:
+            for i in self.all_connections:
+                n, a = x
+                add = n.partition('192.168.247.')[-1]
+                self.new[add] = i
+
 
 class RunServer(ServerInit):
     """These methods are used to run the server"""
@@ -63,7 +71,8 @@ class RunServer(ServerInit):
         while True:
             if cmd == 'quit':
                 self.s.close()
-            elif cmd == 'arm{}'.format(cmd[-2:]):
+            elif cmd[:3] == 'arm':
+                print(cmd)
                 for i in self.all_connections:
                     i.send(str.encode(cmd))
             elif cmd == 'test':
@@ -90,15 +99,16 @@ class RunServer(ServerInit):
         # Welcome to ALAB firefly show.Start show here: select 0 or 1...
         # Press enter to exit from target command section
         try:
-            drone_id = int(number)
-            conn = self.all_connections[drone_id]
-            print("You are now connected to :" + str(self.all_addresses[drone_id][0]))
+            conn = self.new[f'{number}']
+            # conn = self.all_connections[drone_id]
+            # print("You are now connected to :" + str(self.all_addresses[drone_id][0]))
             # print(str(self.all_addresses[drone_id][0]) + ">", end="")
             conn.send(str.encode(cmd))
+            print(number)
             print('sent')
             print(cmd)
 
-        except cmd != 'land' or 'disarm' or 'return':
+        except:
             print("Selection not valid")
 
     def upload_path(self):

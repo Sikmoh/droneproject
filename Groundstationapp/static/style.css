@@ -105,6 +105,16 @@ section{
     height: 65vh;
 }
 
+section .box{
+    padding: 15px;
+    border: 1px solid red;
+    background-color:powderblue;
+    font-size: 1em;
+    width: 100px;
+    display:inline-block;
+    margin: 5px;
+}
+
 footer{
     background-color: rgb(36, 36, 36);
     height: 30vh;
@@ -120,7 +130,7 @@ footer{
 
 footer .grid-container{
     display: grid;
-    grid-template-columns: 30% 30% 40%;
+    grid-template-columns: 30% 20% 50%;
     height: 100%;
     color: white;
     padding: 5px;
@@ -227,7 +237,7 @@ footer .drone-selection button{
 footer .swarm-button{
     padding: 5px;
     width: max-content;
-    display: grid;
+    display: flex;
     align-items: center;
     justify-content: center;
     border: none;

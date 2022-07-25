@@ -10,36 +10,52 @@
 </head>
 <body>
     <nav>
-       <img  src="C:/Users/SIKIRU/Desktop/Droneproject/Groundstationapp/images/icon.jpg" alt="" >
+       <img  src="/static/icon.jpg" alt="" >
        <h1 id="clock"></h1>
-       <form action="{{ url_for('logout') }}">
+       <form action="{{ url_for('routes.logout') }}">
            <button class="logout">Logout</button>
        </form>
 
     </nav>
     <section>
+
     {% extends "layout.html" %}
     {% block body %}
-    <div class="msg">{{ msg }}</div>
 
+    <div class="msg">{{ msg }}</div></br>
+    <div id="telemetry">
+        {% if data   %}
+            {% for value in data %}
+
+            <ul style="display: inline-block;  list-style: none;  padding: 0; background-color:powderblue; width: 120px; border: 1px solid red; margin: 2px; ">
+
+              <li style="padding:2px; font-size: 1em; color: black; font-family: monospace;">id:{{value['id']}}</li>
+              <li style="padding:2px; font-size: 1em; color: black; font-family: monospace;">gps:{{value['GPS']}}</li>
+              <li style="padding:2px; font-size: 1em; color: black; font-family: monospace;">alt:{{value['Altitude']}}</li>
+              <li style="padding:2px; font-size: 1em; color: black; font-family: monospace;">mode:{{value['Vehicle-mode']}}</li>
+
+            </ul>
+            {% endfor %}
+        {% endif %}
+    </div>
     </section>
 
     <footer>
 
         <div class="grid-container">
             <div class="container">
-               <form action="{{url_for('connect_ground_station')}}" class="server-init" method="post">
+               <form action="{{url_for('routes.connect_ground_station')}}" class="server-init" method="post">
                 <button style="font-size: 1.5em; background-color:green; border-radius: 5px; border:none; padding:5px;font-family: monospace;" name="cmd" value="server">CONNECT SERVER</button>
                </form>
             </div>
             <div class="container">
-                <form method="post" enctype=multipart/form-data action="{{url_for('upload_file')}}" class="submit-file" >
+                <form method="post" enctype=multipart/form-data action="{{url_for('routes.upload_file')}}" class="submit-file" >
                     <input type="file" name="file" id="select-file" class="select-file">
                     <input type="submit" id="upload-file" value="Upload">
                 </form>
             </div>
             <div class="container">
-                <form action="{{url_for('select_drone')}}" class="drone-selection" method="post">
+                <form action="{{url_for('routes.select_drone')}}" class="drone-selection" method="POST">
                     <label for="drone-id"> Select Drone</label>
                     <input type="number" name="drone-id" id="drone-id">
                     <button style="border: none; font-family:monospace; font-weight:bold; border-radius:3px; background-color: yellow;" name="cmd" value="rtl">RTL</button>
@@ -48,22 +64,22 @@
                 </form>
 
             <div class="swarm-button">
-                <form action="{{url_for('send_commands')}}" class="takeoff" method="post">
-                    <button style="font-size: 1.5em; background-color: red; border-radius: 5px; border:none; padding:5px;font-family: monospace;" name="cmd" value="arm">TAKE-OFF</button>
+                <form action="{{url_for('routes.send_commands')}}" class="takeoff" method="post">
+                    <button style="font-size: 1.5em; background-color: red; border-radius: 5px; border:none; padding:5px;font-family: monospace; margin:2px;" name="cmd" value="arm">TAKE-OFF</button>
                     <!--input type="text" name="cmd" placeholder="action"-->
                     <!--input type="submit" value="TAKEOFF"-->
                 </form>
-                <form action="{{url_for('send_commands')}}"  method="post">
-                <button style="font-size: 1.5em; background-color:white; border-radius: 5px; border:none; padding:5px;font-family: monospace;" name="cmd" value="test">LIGHT</button>
+                <form action="{{url_for('routes.send_commands')}}"  method="post">
+                <button style="font-size: 1.5em; background-color:white; border-radius: 5px; border:none; padding:5px;font-family: monospace; margin:2px;" name="cmd" value="test">LIGHT</button>
                 </form>
-                <form action="{{url_for('send_commands')}}"  method="post">
-                <button style="font-size: 1.5em; background-color:rgb(49, 166, 245); border-radius: 5px; border:none; padding:5px;font-family: monospace;" name="cmd" value="start">DANCE</button>
+                <form action="{{url_for('routes.send_commands')}}"  method="post">
+                <button style="font-size: 1.5em; background-color:rgb(49, 166, 245); border-radius: 5px; border:none; padding:5px;font-family: monospace; margin:2px;" name="cmd" value="start">DANCE</button>
                 </form>
-                <form action="{{url_for('send_commands')}}"  method="post">
-                <button style="font-size: 1.5em; background-color:green; border-radius: 5px; border:none; padding:5px;font-family: monospace;" name="cmd" value="land">LAND</button>
+                <form action="{{url_for('routes.send_commands')}}"  method="post">
+                <button style="font-size: 1.5em; background-color:green; border-radius: 5px; border:none; padding:5px;font-family: monospace; margin:2px;" name="cmd" value="land">LAND</button>
                 </form>
-                <form action="{{url_for('send_commands')}}"  method="post">
-                <button style="font-size: 1.5em; background-color:red; border-radius: 5px;border:none; padding:5px;font-family: monospace;" name="cmd" value="disarm">DISARM</button>
+                <form action="{{url_for('routes.send_commands')}}"  method="post">
+                <button style="font-size: 1.5em; background-color:red; border-radius: 5px;border:none; padding:5px;font-family: monospace;margin:2px;" name="cmd" value="disarm">DISARM</button>
                 </form>
             </div>
             </div>
@@ -71,36 +87,7 @@
     </footer>
 
 </body>
-<script>
-    setInterval(showTime, 1000);
-    function showTime() {
-        let time = new Date();
-        let hour = time.getHours();
-        let min = time.getMinutes();
-        let sec = time.getSeconds();
-        am_pm = "AM";
+<script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>
 
-        if (hour >= 12) {
-            hour -= 12;
-            am_pm = "PM";
-        }
-        if (hour == 0) {
-            hr = 12;
-            am_pm = "AM";
-        }
-
-        hour = hour < 10 ? "0" + hour : hour;
-        min = min < 10 ? "0" + min : min;
-        sec = sec < 10 ? "0" + sec : sec;
-
-        let currentTime = hour + ":"
-            + min + ":" + sec + am_pm;
-
-        document.getElementById("clock")
-            .innerHTML = currentTime;
-    }
-
-    showTime();
-</script>
 {% endblock %}
 </html>

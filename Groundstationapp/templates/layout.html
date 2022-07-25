@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<div>
 {% with messages = get_flashed_messages() %}
   {% if messages %}
     <ul class=flashes>
@@ -9,3 +10,4 @@
   {% endif %}
 {% endwith %}
 {% block body %}{% endblock %}
+</div></br>

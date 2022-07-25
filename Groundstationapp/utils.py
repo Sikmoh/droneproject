@@ -1,3 +1,4 @@
+import json
 import smtplib
 from flask import request
 import urllib.parse
@@ -45,3 +46,10 @@ def send_email(receiver_email, subject, message_body):
         server.sendmail(SMTP['sender_email'], receiver_email, message)
         server.quit()
 
+
+telemetry=[{'id': 2, 'GPS': 4, 'Battery': 'none', 'Altitude': 5, 'System-status': 'standby',
+              'Vehicle-mode': 'stabilized', 'EKF ok?': 'false'},
+             {'id': 4, 'GPS': 6, 'Battery': 'none', 'Altitude': 150, 'System-status': 'standby',
+              'Vehicle-mode': 'stabilized', 'EKF ok?': 'false'},
+             {'id': 3, 'GPS': 10, 'Battery': 'none', 'Altitude': 10, 'System-status': 'standby',
+              'Vehicle-mode': 'stabilized', 'EKF ok?': 'false'}]
