@@ -97,7 +97,7 @@ def email_verification():
 
 
 # -------------- setup server-------------------------
-@blueprint.route('/connect', methods=["GET", 'POST'])
+@blueprint.route('/connect', methods=['POST'])
 def connect_ground_station():
     number = param['number']
     if request.method == "POST":
@@ -109,7 +109,7 @@ def connect_ground_station():
 
 
 # -----------send command------------------------------
-@blueprint.route('/commands', methods=["GET", "POST"])
+@blueprint.route('/commands', methods=["POST"])
 def send_commands():
     if request.method == "POST":
         cmd = request.form.get("cmd")
